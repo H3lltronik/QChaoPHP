@@ -1,0 +1,4 @@
+VIEWS
+CREATE VIEW getShitpostData AS SELECT idShitpost, usuario.idUsuario, nombre, descripcion, imagen, fecha FROM shitpost INNER JOIN usuario ON shitpost.idUsuario = usuario.idUsuario;
+
+CREATE VIEW getComentariosData as SELECT idComentario, idShitpost, usuario.idUsuario, nombre, comentario FROM comentario INNER JOIN usuario on comentario.idUsuario = usuario.idUsuario;
