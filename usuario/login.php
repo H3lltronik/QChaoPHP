@@ -16,11 +16,11 @@
     }
 
     if ($conn) {
-        $qBuscar = mysqli_query($conn, "SELECT * FROM usuario WHERE Nombre = '$nombre' AND pass = '$password';") or die(mysqli_error($conn));
+        $qBuscar = mysqli_query($conn, "SELECT * FROM getuserinfo WHERE Nombre = '$nombre' AND pass = '$password';") or die(mysqli_error($conn));
         if ($qBuscar) {
             $qResult = mysqli_fetch_assoc($qBuscar);
             $user = $qResult;
-            if ($qResult['Nombre'] === $nombre) {
+            if ($qResult['nombre'] === $nombre) {
                 $status = 'OK';
                 $result = 'SI EXISTE USUARIO';
             } else {

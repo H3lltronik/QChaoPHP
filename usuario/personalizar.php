@@ -1,11 +1,10 @@
 <?php
     require('../base.php');
-    $idUsuario = '';
-    $telefono = '';
-    $ubicacion = '';
-    $nickname = '';
-    $descripcion = '';
-    $imagen = '';
+    $idUsuario = NULL;
+    $tags = NULL;
+    $descripcion = NULL;
+    $imagen = NULL;
+    $nickname = NULL;
 
     $state = '';
     $result = '';
@@ -14,12 +13,8 @@
         $idUsuario = $_POST['idUsuario'];
     }
 
-    if (isset($_POST['telefono'])) {
-        $telefono = $_POST['telefono'];
-    }
-
-    if (isset($_POST['ubicacion'])) {
-        $ubicacion = $_POST['ubicacion'];
+    if (isset($_POST['tags'])) {
+        $tags = $_POST['tags'];
     }
 
     if (isset($_POST['nickname'])) {
@@ -30,26 +25,52 @@
         $descripcion = $_POST['descripcion'];
     }
 
-    if (isset($_POST['imagen'])) {
-        $imagen = $_POST['imagen'];
+    if (isset($_FILES['file']['name'])) {
+        $imagen = $_FILES['file']['name'];
     }
 
     if ($conn) {
-        // Crear carpeta de usuarios
-        $ruta = '../../Profiles/';
-        if(!is_dir($ruta)){
-            $response .= 'Carpeta Profiles creada';
-            mkdir($ruta);
+        // Registrar la imagen
+        if ($imagen) {
+            $ext = pathinfo($imagen, PATHINFO_EXTENSION);
+            $nombreFichero = $idUsuario . '.' . $ext;
+            $ruta = '../../media/usuarios/' . $nombreFichero;
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $ruta)) {
+                $qUpdateImg = mysqli_query($conn, "UPDATE personalizacion SET rutaImagen = '$nombreFichero' WHERE idUsuario = '$idUsuario'");
+                if ($qUpdateImg) {
+                    $result .= ' SE REGISTRO LA IMAGEN ';    
+                } else {
+                    $result .= ' NO SE PUDO REGISTRAR LA IMAGEN ';
+                }
+                $result .= ' SE SUBIO LA IMAGE ';
+            } else {
+                $result .= ' NO SE PUDO SUBIR LA IMAGEN ';
+            }
         }
-        // Crear carpeta de usuario
-        if(!is_dir($ruta + $idUsuario)){
-            $response .= 'Carpeta Usuario creada';
-            mkdir($ruta + $idUsuario);
+
+        if ($descripcion) {
+            $qUpdateDesc = mysqli_query($conn, "UPDATE personalizacion SET descripcion = '$descripcion' WHERE idUsuario = '$idUsuario'");
+            if ($qUpdateDesc) {
+                $result .= ' SE CAMBIO LA DESCRIPCION ';    
+            } else {
+                $result .= ' NO SE PUDO CAMBIAR LA DESCRIPCION ';
+            }
         }
-        $qCreate = mysqli_query($conn, "INSERT INTO personalizacion (Telefono, Ubicacion, Nickname, Descripcion, rutaImagen)
-        VALUES ('$telefono', '$ubicacion', '$nickname', '$descripcion', '$rutaImagen')");
+
+        if ($nickname) {
+            $qUpdateNick = mysqli_query($conn, "UPDATE personalizacion SET nickname = '$nickname' WHERE idUsuario = '$idUsuario'");
+            if ($qUpdateNick) {
+                $result .= ' SE CAMBIO EL NICKNAME ';    
+            } else {
+                $result .= ' NO SE PUDO CAMBIAERL EL NICKNAME ';
+            }
+        }
+        $state = 'OK';
+        //PENDIENTE TAGS
     } else {
         $state = 'BAD';
         $result = 'SIN CONEXION';
     }
+
+    echo json_encode(array('status'=>$state, 'response'=>$result));
 ?>
