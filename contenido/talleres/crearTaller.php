@@ -4,10 +4,11 @@
     $nombre = '';
     $descripcion = '';
     $domicilio = '';
-    $fecha = '';
-    $entrada = '';
-    $ciudad = '';
+    $contacto = '';
+    $horario = '';
     $tags = '';
+    $tipo = '';
+    $ciudad = '';
     $imagenes = $_FILES;
 
     $status = '';
@@ -25,11 +26,14 @@
     if (isset($_POST['domicilio'])) {
         $domicilio = $_POST['domicilio'];
     }
-    if (isset($_POST['fecha'])) {
-        $fecha = $_POST['fecha'];
+    if (isset($_POST['contacto'])) {
+        $contacto = $_POST['contacto'];
     }
-    if (isset($_POST['entrada'])) {
-        $entrada = $_POST['entrada'];
+    if (isset($_POST['horario'])) {
+        $horario = $_POST['horario'];
+    }
+    if (isset($_POST['tipo'])) {
+        $tipo = $_POST['tipo'];
     }
     if (isset($_POST['ciudad'])) {
         $ciudad = $_POST['ciudad'];
@@ -38,18 +42,18 @@
 
     if ($conn) {
         $cantImagenes = sizeof($imagenes);
-        $qEvento = mysqli_query($conn, "INSERT INTO eventos 
-        (idUsuario, Titulo, Ubicacion, domicilio, Fecha, Descripcion, entrada, cantImagenes) VALUES 
-        ('$idUsuario', '$nombre', '$ciudad', '$domicilio', '$fecha', '$descripcion', '$entrada', '$cantImagenes')") 
+        $qEvento = mysqli_query($conn, "INSERT INTO establecimientos 
+        (idUsuario, Nombre, Descripcion, Domicilio, ciudad, Contacto, tipoEstablecimiento, horario, cantImagenes) VALUES 
+        ('$idUsuario', '$nombre', '$descripcion', '$domicilio', '$ciudad', '$contacto', '$tipo', '$horario', '$cantImagenes')") 
         or die(mysqli_error($conn));
         if ($qEvento) {
-            $idEvento = mysqli_query($conn, "SELECT LAST_INSERT_ID();");
-            $idEvento = mysqli_fetch_assoc($idEvento);
-            $idEvento = $idEvento['LAST_INSERT_ID()'];
+            $idEstablecimiento = mysqli_query($conn, "SELECT LAST_INSERT_ID();");
+            $idEstablecimiento = mysqli_fetch_assoc($idEstablecimiento);
+            $idEstablecimiento = $idEstablecimiento['LAST_INSERT_ID()'];
 
-            guardarImagenes ($idEvento);
+            guardarImagenes ($idEstablecimiento);
             $status = 'OK';
-            $result = 'SE HA CREADO EL EVENTO';
+            $result = 'SE HA CREADO EL TALLER';
         } else {
             $status = 'BAD';
             $result = 'ERROR EN EL QUERY';
@@ -61,12 +65,12 @@
 
     echo json_encode(array('status'=>$status, 'response'=>$result));
 
-    function guardarImagenes ($idEvento) {
+    function guardarImagenes ($idEstablecimiento) {
         $cont = 0;
         foreach($_FILES as $aux) {
             $ext = 'jpg';
             $nombreFichero = $cont++  . '.' . $ext;
-            $ruta = '../../../media/eventos/'.$idEvento;
+            $ruta = '../../../media/establecimientos/'.$idEstablecimiento;
             if(!is_dir($ruta))
                 mkdir($ruta);
             $ruta .= '/' . $nombreFichero;
