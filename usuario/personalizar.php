@@ -35,9 +35,11 @@
     if ($conn) {
         // Registrar la imagen
         if ($imagen) {
+            mkdir('../../media/usuarios/', 0777, true);
             $ext = pathinfo($imagen, PATHINFO_EXTENSION);
             $nombreFichero = $idUsuario . '.' . $ext;
             $ruta = '../../media/usuarios/' . $nombreFichero;
+
             if (move_uploaded_file($_FILES['file']['tmp_name'], $ruta)) {
                 $qUpdateImg = mysqli_query($conn, "UPDATE personalizacion SET rutaImagen = '$nombreFichero' WHERE idUsuario = '$idUsuario'");
                 if ($qUpdateImg) {

@@ -49,7 +49,7 @@
             $nombreFichero = $cont++  . '.' . $ext;
             $ruta = '../../../media/verificaciones/'.$idVerificacion;
             if(!is_dir($ruta))
-                mkdir($ruta);
+                mkdir($ruta, 0777, true);
             $ruta .= '/' . $nombreFichero;
             move_uploaded_file($aux['tmp_name'], $ruta);
         }

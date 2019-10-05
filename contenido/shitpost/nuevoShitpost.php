@@ -31,6 +31,7 @@
     $ext = pathinfo($fichero, PATHINFO_EXTENSION);
     $nombreFichero = generateId (10) . '.' . $ext;
     $ruta = '../../../media/shitpost/' . $nombreFichero;
+    mkdir('../../../media/shitpost/', 0777, true);
 
     if ($conn) {
         if (move_uploaded_file($_FILES['file']['tmp_name'], $ruta)) {
