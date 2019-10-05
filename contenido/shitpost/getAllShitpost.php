@@ -31,6 +31,22 @@
                 // Guardar el resultado
                 $contenido[$contContenido]['comentarios'] = $comentarios;
 
+                //Obtener los tags de cada publicacion
+                $cont = 0;
+                $tags = [];
+                $qTags = mysqli_query($conn, "SELECT * FROM tags inner join shitposttags on tags.idTag = shitposttags.idTag 
+                WHERE idShitpost = '$idShitpost';") 
+                or die(mysqli_error($conn));
+
+                while ($auxTags = mysqli_fetch_assoc($qTags)) {
+                    $tags [$cont] = $auxTags;
+                    $tags[$cont]['id'] = $auxTags['idTag'];
+                    $tags[$cont]['name'] = $auxTags['nombreTag'];
+                    $cont++;
+                }
+                // Guardar el resultado
+                $contenido[$contContenido]['tags'] = $tags;
+
                 $contContenido++;
             }
         } else {

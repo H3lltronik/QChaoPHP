@@ -1,9 +1,14 @@
 <?php
     require('../../base.php');
     $talleres = [];
+    $idTaller = "";
+
+    if (isset($_POST['idTaller'])) {
+        $idTaller = $_POST['idTaller'];
+    }
 
     if ($conn) {
-        $qTaller = mysqli_query($conn, "SELECT * FROM gettalleresdata") or die(mysqli_error($conn));
+        $qTaller = mysqli_query($conn, "SELECT * FROM gettalleresdata WHERE idEstablecimiento = '$idTaller'") or die(mysqli_error($conn));
         if ($qTaller) {
             $contTalleres = 0;
             while ($auxTaller = mysqli_fetch_assoc($qTaller)) {

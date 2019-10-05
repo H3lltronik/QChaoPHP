@@ -52,6 +52,8 @@
                 $idShitpost = mysqli_fetch_assoc($idShitpost);
                 $idShitpost = $idShitpost['LAST_INSERT_ID()'];
 
+                guardarTags ($tags, $idShitpost, $conn);
+
                 $status = 'OK';
                 $result .= 'INFORMACION GUARDADA';
             } else {
@@ -68,4 +70,20 @@
     }
 
     echo json_encode(array('status'=>$status, 'response'=>$result, 'fecha'=>$fecha, 'idShitpost'=>$idShitpost, 'fichero'=>$nombreFichero, 'tipo'=>$tipo));
+
+    function guardarTags ($tags, $idShitpost, $conn) {
+        foreach($tags as $auxTag) {
+            $auxDecoded = json_decode($auxTag, true);
+            $auxDecoded = $auxDecoded['name'];
+            $qTags = mysqli_query($conn, "INSERT INTO `tags` (`nombreTag`) VALUES ('$auxDecoded') 
+            ON DUPLICATE KEY UPDATE idTag=LAST_INSERT_ID(idTag), `nombreTag`='$auxDecoded';") 
+            or die(mysqli_error($conn));
+
+            $idTag = mysqli_query($conn, "SELECT LAST_INSERT_ID();");
+            $idTag = mysqli_fetch_assoc($idTag);
+            $idTag = $idTag['LAST_INSERT_ID()'];
+
+            $qTag = mysqli_query($conn, "INSERT INTO shitposttags (idShitpost, idTag) VALUES ('$idShitpost', '$idTag')") or die(mysqli_error($conn));
+        }
+    }
 ?>

@@ -11,6 +11,7 @@
 
     if (isset($_POST['idUsuario'])) {
         $idUsuario = $_POST['idUsuario'];
+        $idUsuario = str_replace('"', '', $idUsuario);
     }
 
     if (isset($_POST['tags'])) {
@@ -19,10 +20,12 @@
 
     if (isset($_POST['nickname'])) {
         $nickname = $_POST['nickname'];
+        $nickname = str_replace('"', '', $nickname);
     }
 
     if (isset($_POST['descripcion'])) {
         $descripcion = $_POST['descripcion'];
+        $descripcion = str_replace('"', '', $descripcion);
     }
 
     if (isset($_FILES['file']['name'])) {

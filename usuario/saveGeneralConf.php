@@ -11,22 +11,27 @@
 
     if (isset($_POST['idUsuario'])) {
         $idUsuario = $_POST['idUsuario'];
+        //$idUsuario = str_replace('"', '', $idUsuario);
     }
 
     if (isset($_POST['nombre'])) {
         $nombre = $_POST['nombre'];
+        //$nombre = str_replace('"', '', $nombre);
     }
 
     if (isset($_POST['correo'])) {
         $correo = $_POST['correo'];
+        //$correo = str_replace('"', '', $correo);
     }
 
     if (isset($_POST['password'])) {
         $password = $_POST['password'];
+        //$password = str_replace('"', '', $password);
     }
 
     if (isset($_POST['telefono'])) {
         $telefono = $_POST['telefono'];
+        //$telefono = str_replace('"', '', $telefono);
     }
 
     if ($conn) {

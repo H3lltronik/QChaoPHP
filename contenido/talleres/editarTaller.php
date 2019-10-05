@@ -1,6 +1,6 @@
 <?php
     require('../../base.php');
-    $idUsuario = '';
+    $idEstablecimiento = '';
     $nombre = '';
     $descripcion = '';
     $domicilio = '';
@@ -14,9 +14,9 @@
     $status = '';
     $result = '';
 
-    if (isset($_POST['idUsuario'])) {
-        $idUsuario = $_POST['idUsuario'];
-        $idUsuario = str_replace('"', '', $idUsuario);
+    if (isset($_POST['idEstablecimiento'])) {
+        $idEstablecimiento = $_POST['idEstablecimiento'];
+        $idEstablecimiento = str_replace('"', '', $idEstablecimiento);
     }
     if (isset($_POST['nombre'])) {
         $nombre = $_POST['nombre'];
@@ -61,15 +61,11 @@
 
     if ($conn) {
         $cantImagenes = sizeof($imagenes);
-        $qEvento = mysqli_query($conn, "INSERT INTO establecimientos 
-        (idUsuario, Nombre, Descripcion, Domicilio, ciudad, Contacto, tipoEstablecimiento, horario, cantImagenes) VALUES 
-        ('$idUsuario', '$nombre', '$descripcion', '$domicilio', '$ciudad', '$contacto', '$tipo', '$horario', '$cantImagenes')") 
+        $qEvento = mysqli_query($conn, "UPDATE establecimientos SET Nombre = '$nombre', Descripcion = '$descripcion', Domicilio = '$domicilio', 
+        ciudad = '$ciudad', Contacto = '$contacto', tipoEstablecimiento = '$tipo', horario = '$horario', cantImagenes = '$cantImagenes'
+         WHERE idEstablecimiento = '$idEstablecimiento'") 
         or die(showError(mysqli_error($conn)));
         if ($qEvento) {
-            $idEstablecimiento = mysqli_query($conn, "SELECT LAST_INSERT_ID();");
-            $idEstablecimiento = mysqli_fetch_assoc($idEstablecimiento);
-            $idEstablecimiento = $idEstablecimiento['LAST_INSERT_ID()'];
-
             guardarImagenes ($idEstablecimiento);
             guardarTags($tags, $idEstablecimiento, $conn);
             $status = 'OK';
@@ -114,7 +110,10 @@
             $idTag = mysqli_fetch_assoc($idTag);
             $idTag = $idTag['LAST_INSERT_ID()'];
 
-            $qTag = mysqli_query($conn, "INSERT INTO establecimientostags (idEstablecimiento, idTag) VALUES ('$idEstablecimiento', '$idTag')") or die(showError(mysqli_error($conn)));
+            $existe = mysqli_query($conn, "SELECT * FROM establecimientostags WHERE idTag = '$idTag' AND idEstablecimiento = '$idEstablecimiento'");
+            if (mysqli_num_rows($existe)==0) {
+                $qTag = mysqli_query($conn, "INSERT INTO establecimientostags (idEstablecimiento, idTag) VALUES ('$idEstablecimiento', '$idTag')") or die(showError(mysqli_error($conn)));
+            }
         }
     }
 ?>

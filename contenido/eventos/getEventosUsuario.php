@@ -1,9 +1,10 @@
 <?php
     require('../../base.php');
     $eventos = [];
+    $idUsuario = ''; if (isset($_POST['idUsuario'])) { $idUsuario = $_POST['idUsuario']; }
 
     if ($conn) {
-        $qEvento = mysqli_query($conn, "SELECT * FROM getEventData") or die(mysqli_error($conn));
+        $qEvento = mysqli_query($conn, "SELECT * FROM getEventData WHERE idUsuario = '$idUsuario'") or die(mysqli_error($conn));
         if ($qEvento) {
             $contEventos = 0;
             while ($auxEvento = mysqli_fetch_assoc($qEvento)) {
