@@ -13,14 +13,24 @@
 
     if (isset($_POST['idUsuario'])) {
         $idUsuario = $_POST['idUsuario'];
+        $idUsuario = str_replace('"', '', $idUsuario);
     }
 
     if (isset($_POST['descripcion'])) {
         $descripcion = $_POST['descripcion'];
+        $descripcion = str_replace('"', '', $descripcion);
     }
 
     if (isset($_POST['tags'])) {
-        $tags = json_decode($_POST['tags']);
+        $tags = $_POST['tags'];
+        $primChar = substr($tags, 0, 1);
+        if ($primChar == '"') {
+            $tags = substr($tags, 1);
+            $tags = substr($tags, 0, -1);
+            $tags = stripslashes($tags);
+        }
+        //error_log("Tags: ".$tags."\n" , 3, "WOW.log");
+        $tags = json_decode($tags);
     }
 
     if (isset($_FILES['file']['name'])) {
@@ -31,7 +41,8 @@
     $ext = pathinfo($fichero, PATHINFO_EXTENSION);
     $nombreFichero = generateId (10) . '.' . $ext;
     $ruta = '../../../media/shitpost/' . $nombreFichero;
-    mkdir('../../../media/shitpost/', 0777, true);
+    if (!is_dir('../../../media/shitpost/'))
+        mkdir('../../../media/shitpost/', 0777, true);
 
     if ($conn) {
         if (move_uploaded_file($_FILES['file']['tmp_name'], $ruta)) {
@@ -46,7 +57,7 @@
             }
 
             $qShitpost = mysqli_query($conn, "INSERT INTO shitpost (idUsuario, descripcion, imagen, fecha, tipo) 
-            VALUES ('$idUsuario', '$descripcion', '$nombreFichero', '$fecha', '$tipo')");
+            VALUES ('$idUsuario', '$descripcion', '$nombreFichero', '$fecha', '$tipo')")  or die(showError(mysqli_error($conn)));
             if ($qShitpost) {
 
                 $idShitpost = mysqli_query($conn, "SELECT LAST_INSERT_ID();");
@@ -86,5 +97,9 @@
 
             $qTag = mysqli_query($conn, "INSERT INTO shitposttags (idShitpost, idTag) VALUES ('$idShitpost', '$idTag')") or die(mysqli_error($conn));
         }
+    }
+
+    function showError ($error) {
+        error_log($error, 3, "php.log");
     }
 ?>

@@ -33,7 +33,8 @@
     $ext = pathinfo($fichero, PATHINFO_EXTENSION);
     $nombreFichero = generateId (10) . '.' . $ext;
     $ruta = '../../../media/hilos/' . $nombreFichero;
-    mkdir('../../../media/hilos/', 0777, true);
+    if (!is_dir('../../../media/hilos/'))
+        mkdir('../../../media/hilos/', 0777, true);
     
     if ($conn) {
         if ($fichero) {

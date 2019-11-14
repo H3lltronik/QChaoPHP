@@ -1,0 +1,1 @@
+Cannot add or update a child row: a foreign key constraint fails (`qchaoweb`.`shitpost`, CONSTRAINT `shitpostUsuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`) ON DELETE CASCADE ON UPDATE CASCADE)

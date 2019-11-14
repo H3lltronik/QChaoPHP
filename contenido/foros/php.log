@@ -1,1 +1,1 @@
-Table 'qchaoweb.hilo' doesn't exist
+Table 'qchaoweb.hilo' doesn't existCannot add or update a child row: a foreign key constraint fails (`qchaoweb`.`hilos`, CONSTRAINT `hiloUsuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`) ON DELETE CASCADE ON UPDATE CASCADE)

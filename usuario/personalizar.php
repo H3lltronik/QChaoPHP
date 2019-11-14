@@ -35,7 +35,9 @@
     if ($conn) {
         // Registrar la imagen
         if ($imagen) {
-            mkdir('../../media/usuarios/', 0777, true);
+            if (!is_dir('../../media/usuarios/'))
+                mkdir('../../media/usuarios/', 0777, true);
+
             $ext = pathinfo($imagen, PATHINFO_EXTENSION);
             $nombreFichero = $idUsuario . '.' . $ext;
             $ruta = '../../media/usuarios/' . $nombreFichero;
