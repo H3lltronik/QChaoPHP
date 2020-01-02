@@ -53,8 +53,23 @@
                     $contHilos++;
                 }
 
-
                 $posts[$cont]['hilos'] = $hilos;
+
+                //Obtener los tags de cada publicacion
+                $tags = [];
+                $contTags = 0;
+                $qTags = mysqli_query($conn, "SELECT * FROM tags inner join posttags on tags.idTag = posttags.idTag 
+                WHERE idPost = '$idPost';") 
+                or die(mysqli_error($conn));
+
+                while ($auxTags = mysqli_fetch_assoc($qTags)) {
+                    $tags [$contTags] = $auxTags;
+                    $tags[$contTags]['id'] = $auxTags['idTag'];
+                    $tags[$contTags]['name'] = $auxTags['nombreTag'];
+                    $contTags++;
+                }
+
+                $posts[$cont]['tags'] = $tags;
 
                 $cont++;
             }

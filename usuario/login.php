@@ -47,9 +47,7 @@
                 $expireDate = new DateTime(); // Se crea la fecha del bloqueo sin valor
                 $expireDate->setTimestamp($auxTimestamp); // Se le asigan el valor del timestamp del bloqueo
                 // Si ya paso el bloqueo
-                if($today->format("Y-m-d") > $expireDate->format("Y-m-d")) { 
-                    // Como ya no esta bloqueado ps se borra el bloqueo de la tabla
-                    $qDelBloqueo = mysqli_query($conn, "DELETE FROM bloqueos WHERE idUsuario = '$idUsuario'") or die(mysqli_error($conn));
+                    
                     // Si se genero el login entonces crear una sesion
                     $qSesion = mysqli_query($conn, "INSERT INTO sesiones (idUsuario, sesionToken, sesionInfo)
                     VALUES ('$idUsuario', '$token', '$browser')") 
@@ -57,19 +55,30 @@
                     if ($qSesion) {
                         $status = 'OK';
                         $result = 'SI EXISTE USUARIO';
+
+                        if($today->format("Y-m-d") < $expireDate->format("Y-m-d")) {
+                            $bloqueado = true;
+                    
+                            $status = 'BLOQUEADO';
+                            $result = 'USUARIO BLOQUEADO';
+                        } else {
+                            // Como ya no esta bloqueado ps se borra el bloqueo de la tabla
+                            $qDelBloqueo = mysqli_query($conn, "DELETE FROM bloqueos WHERE idUsuario = '$idUsuario'") or die(mysqli_error($conn));
+                        }
+
                     } else {
                         $status = 'BAD';
                         $result = 'NO SE PUDO CREAR LA SESION';
                     }
 
                     // SI sigue bloqueado
-                } else {
-                    $user = NULL;
-                    $bloqueado = true;
+                // else {
+                //     $user = NULL;
+                //     $bloqueado = true;
                     
-                    $status = 'BLOQUEADO';
-                    $result = 'USUARIO BLOQUEADO';
-                }
+                //     $status = 'BLOQUEADO';
+                //     $result = 'USUARIO BLOQUEADO';
+                // }
 
                 
             } else {

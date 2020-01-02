@@ -10,6 +10,14 @@
                 $talleres[$contTalleres] = $auxTaller;
                 $idEstablecimiento = $talleres[$contTalleres]['idEstablecimiento'];
 
+                // Obtener calificaciones -------------------------------------------- //
+                $calificaciones = [];
+                $qCalificaciones = mysqli_query($conn, "SELECT * FROM calificacionestablecimiento WHERE idEstablecimiento = '$idEstablecimiento'") or die(mysqli_error($conn));
+                while ($auxCalificacion = mysqli_fetch_assoc($qCalificaciones)) {
+                    $calificaciones[] = $auxCalificacion;
+                }
+                $talleres[$contTalleres]['calificaciones'] = $calificaciones;
+
                 //Obtener los tags de cada publicacion
                 $cont = 0;
                 $tags = [];
